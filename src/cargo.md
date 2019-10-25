@@ -1,0 +1,159 @@
+# 开始
+
+## 安装
+
+安装 Rustup 工具：`curl https://sh.rustup.rs -sSf | sh`
+
+添加环境变量：`source $HOME/.cargo/env`
+
+更新：`rustup update`
+
+## 离线文档
+
+运行 `rustup doc` 在浏览器中查看离线文档。
+
+## Hello World
+
+```rust
+//  main.rs
+fn main() {
+    println!("Hello, world!");
+}
+```
+
+```shell
+# 编译
+rustc main.rs
+
+# 运行
+./main
+
+# 输出
+Hello, world!
+```
+
+使用 `rustc` 编译简单程序是没问题的，复杂项目则需要专门工具进行管理。
+
+## 项目管理工具
+
+Cargo 是 Rust 的构建系统及包管理器。
+
+### 安装自动格式化工具
+
+```shell
+# 安装
+cargo install rustfmt
+
+# 使用
+cargo fmt
+```
+
+### 检查 Cargo 是否已安装
+
+```shell
+cargo --version
+```
+
+### 使用 Cargo 创建项目
+
+```shell
+cargo new hello_cargo
+cd hello_cargo
+```
+
+Cargo 在 `hello_cargo` 目录下生成两个文件和一个目录：
+
+- `Cargo.toml`（ Cargo 配置文件 ）
+- `src/`
+  - `main.rs`
+- `.gitignore`
+
+#### `Cargo.toml` 文件
+
+```shell
+[package]
+name = "hello_cargo"
+version = "0.1.0"
+authors = ["Your Name <you@example.com>"]
+edition = "2018"
+
+[dependencies]
+```
+
+每个 `[xxx]` 代表一个配置分段，可以添加多个配置分段。
+
+`[package]` 分段用于配置包。这里设置了 Cargo 编译程序所需的项目名称、版本和作者信息。
+
+`[dependencies]` 分段配置依赖。代码包被称为 `crates`。本项目不需要其他的 `crate`。
+
+使用依赖：
+
+```shell
+[dependencies]
+actix-web = "1.0"
+```
+
+使用测试版本依赖：
+
+```shell
+[dependencies]
+actix-web = { git = "https://github.com/actix/actix-web" }
+```
+
+#### `src/main.rs`
+
+```rust
+fn main() {
+    println!("Hello, world!");
+}
+```
+
+Cargo 规定源文件存放在 `src` 目录中。项目根目录只存放 `README`、`license` 信息、配置文件和其他跟代码无关的文件。使用 Cargo 帮助保持项目整洁有序。
+
+### 构建并运行 Cargo 项目
+
+```bash
+# 编译、生成可执行文件（ 输出至 target/debug ）
+cargo build
+
+# 编译、生成可执行文件（ 输出至 target/debug ）、运行
+# 如果文件未改动则跳过编译，直接运行
+cargo run
+
+# 快速验证代码可编译，不生成可执行文件，比 cargo build 快得多
+cargo check
+```
+
+编写代码时定期运行 `cargo check` 确保可以编译，当准备好生成可执行文件时运行 `cargo build`。
+
+#### `Cargo.lock` 文件
+
+首次运行 `cargo build` 时，Cargo 会在项目根目录创建该文件，用于记录项目依赖的实际版本。示例项目没有依赖，所以其内容比较少。不需手工修改此文件，Cargo 会自动处理。
+
+### 发布构建
+
+当项目最终准备好发布时，可以使用 `cargo build --release` 来优化编译项目，让 Rust 代码运行得更快，不过启用优化也需要更长的编译时间。
+
+```bash
+cargo build --release # 最终优化编译（ 输出至 target/release ）
+```
+
+这也是为什么会有两种不同的构建配置：
+
+一种是为了开发，适用于需要经常快速重新构建的场景；另一种是为用户构建最终程序，构建频次低，并且希望程序运行得越快越好。
+
+如果需要测试代码运行时间，请确保运行 `cargo build --release` 并使用 `target/release` 下的可执行文件进行测试。
+
+## 自定义构建
+
+配置 `Cargo.toml` 文件：
+
+```shell
+[profile.dev]
+opt-level = 0
+
+[profile.release]
+opt-level = 3
+```
+
+## @ 工作区
