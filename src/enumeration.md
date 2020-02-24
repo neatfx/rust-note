@@ -1,32 +1,30 @@
 # 枚举
 
-枚举（ Enumeration ）通过列举可能的值的方式来定义一个类型
-
 ## 定义枚举
 
 ```rust
 enum IpAddrKind {
-    V4, // 枚举成员
-    V6, // 枚举成员
+    V4, // 枚举变体
+    V6, // 枚举变体
 }
 
-let four = IpAddrKind::V4; // 枚举实例
-let six = IpAddrKind::V6; // 枚举实例
+let four = IpAddrKind::V4; // 枚举 IpAddrKind 的变体 V4 的实例
+let six = IpAddrKind::V6; // 枚举 IpAddrKind 的变体 V6 的实例
 ```
 
-### 枚举成员的类型
+### 枚举变体的值类型
 
 ```rust
 fn route(ip_type: IpAddrKind) { }
 
-// IpAddrKind::V4 和 IpAddrKind::V6 都是 IpAddrKind 类型
+// IpAddrKind::V4 和 IpAddrKind::V6 均为 IpAddrKind 类型
 route(IpAddrKind::V4);
 route(IpAddrKind::V6);
 ```
 
-### 将枚举成员与值相关联
+## 将枚举变体与值进行关联
 
-通过结构体实现
+### 方法 1: 通过结构体实现
 
 ```rust
 struct IpAddr {
@@ -45,9 +43,7 @@ let loopback = IpAddr {
 };
 ```
 
-### 将数据直接放入枚举成员
-
-直接将数据附加到枚举的成员，不再需要额外的结构体：
+### 方法 2: 直接将数据直接存放到枚举变体
 
 ```rust
 enum IpAddr {
@@ -59,7 +55,7 @@ let home = IpAddr::V4(String::from("127.0.0.1"));
 let loopback = IpAddr::V6(String::from("::1"));
 ```
 
-使用枚举替代结构体还有一个优势就是每个成员可以处理不同类型和数量的数据：
+不采用结构体实现的另一个好处是每个枚举变体可以拥有不同类型和数量的数据：
 
 ```rust
 enum IpAddr {
@@ -71,59 +67,7 @@ let home = IpAddr::V4(127, 0, 0, 1);
 let loopback = IpAddr::V6(String::from("::1"));
 ```
 
-## 存储不同数量和类型的关联值
-
-### 定义有关联值的枚举
-
-```rust
-enum Message {
-    Quit, // 没有关联任何数据
-    Move { x: i32, y: i32 }, // 包含一个匿名结构体
-    Write(String), // 包含单独一个 String
-    ChangeColor(i32, i32, i32), // 包含三个 i32
-}
-```
-
-### 定义多个不同类型的结构体
-
-```rust
-struct QuitMessage; // 类单元结构体
-struct MoveMessage {
-    x: i32,
-    y: i32,
-}
-struct WriteMessage(String); // 元组结构体
-struct ChangeColorMessage(i32, i32, i32); // 元组结构体
-```
-
-尽管使用不同的结构体，也可以实现存储不同数量类型的关联值，但枚举是单独一个类型，而不同的结构体具有不同的类型，很难定义一个能够处理这些不同类型的结构体的函数。
-
-## 在枚举上定义方法
-
-```rust
-enum Message {
-    Quit,
-    Move { x: i32, y: i32 },
-    Write(String),
-    ChangeColor(i32, i32, i32),
-}
-
-impl Message {
-    fn call(&self) {
-        // 在这里定义方法体
-    }
-}
-
-let m = Message::Write(String::from("hello"));
-m.call();
-```
-
-## `IpAddr` 枚举
-
-以 `IpAddr` 为例，可以看出
-
-- 标准库中枚举类型的实现也并没有想象中的复杂
-- 可将任意类型数据放入枚举成员中，例如字符串、数字类型或者结构体，甚至可以包含另一个枚举。
+## 常用标准库枚举 -  `IpAddr`
 
 ```rust
 struct Ipv4Addr {
@@ -140,11 +84,63 @@ enum IpAddr {
 }
 ```
 
-## `Option<T>` 枚举
+以 `IpAddr` 为例，可以看出：
+
+- 标准库中枚举类型的实现并没有想象中的复杂
+- 可将任意类型数据放入枚举变体中，例如字符串、数字类型或者结构体，甚至是枚举
+
+## 存储多样化数据
+
+### 方法 1
+
+```rust
+enum Message {
+    Quit, // 没有关联任何数据
+    Move { x: i32, y: i32 }, // 包含一个匿名结构体
+    Write(String), // 包含单独一个 String
+    ChangeColor(i32, i32, i32), // 包含三个 i32
+}
+```
+
+### 方法 2
+
+```rust
+struct QuitMessage; // 类单元结构体
+struct MoveMessage {
+    x: i32,
+    y: i32,
+}
+struct WriteMessage(String); // 元组结构体
+struct ChangeColorMessage(i32, i32, i32); // 元组结构体
+```
+
+尽管使用结构体也可以实现存储不同数量类型的数据，不过枚举是单一类型，而不同的结构体具有不同的类型，如果需要定义一个处理这些不同类型数据的函数，相较而言使用枚举更容易一些。
+
+## 为枚举定义方法
+
+```rust
+enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
+
+impl Message {
+    fn call(&self) {
+        // 方法体
+    }
+}
+
+let m = Message::Write(String::from("hello"));
+m.call();
+```
+
+## 常用标准库枚举 - `Option<T>`
 
 空值（ Null ）是一个值，它代表没有值。有空值的语言中，变量总是处于空值和非空值两种状态之一。
 
-尽管没有其他语言中的空值功能，不过 Rust 标准库中提供了表示编码存在或不存在概念的枚举类型 `Option<T>`，它表示一个值要么是某个值要么什么都不是。`Option<T>` 枚举的作用非常重要，因此被包含在了 `prelude` 之中，不需要显式引入。其成员 `Some` 和 `None` 也可以直接使用（ 不需要 `Option::` 前缀 ）。即便如此 `Option<T>` 仍是常规枚举，`Some(T)` 和 `None` 是其成员。
+尽管没有其他语言中的空值功能，不过 Rust 标准库提供了表示存在或不存在概念的枚举类型 `Option<T>`，它表示一个值要么是某个值要么什么都不是。`Option<T>` 枚举非常有用，因此被包含在了 `prelude` 中，使用时无需显式引入。其变体 `Some` 和 `None` 也可以直接使用（ 无需使用 `Option::` 前缀 ）。`Option<T>` 仍是一个常规枚举，`Some(T)` 和 `None` 仍是 `Option<T>` 类型的变体。
 
 ```rust
 enum Option<T> {
@@ -153,15 +149,15 @@ enum Option<T> {
 }
 ```
 
-当有 `Some` 值时，我们就知道存在一个值，而这个值保存在 `Some` 中。当有个 `None` 值时，在某种意义上，它跟空值具有相同的意义：并没有一个有效的值。
+当有 `Some` 值时，我们知道存在一个被 `Some` 所持有的值。当有 `None` 值时，在某种意义上，它跟空值同义：并没有一个有效的值。
 
-如果使用 `None` 而不是 `Some`，需要告诉 Rust `Option<T>` 是什么类型的，因为编译器只通过 `None` 值无法推断出 `Some` 成员保存的值的类型。
+使用 `None` 时，需要告诉 Rust `Option<T>` 的类型，因为编译器仅通过 `None` 值无法推断出 `Some` 变体持有值的类型。
 
-### 使用 `Option<T>` 相比空值的优势
+### `Option<T>` 相比 `null` 的优势
 
 `Option<T>` 和 `T` 是不同的类型，编译器不允许像使用一个确定有效的值那样使用 `Option<T>`
 
-运行以下代码，将得到错误：
+运行以下代码：
 
 ```rust
 let x: i8 = 5;
@@ -170,20 +166,34 @@ let y: Option<i8> = Some(5);
 let sum = x + y;
 ```
 
-当在 Rust 中使用 `i8` 这样类型的值时，编译器确保它总是有一个有效的值，可放心使用而无需做空值检查。只有当使用 `Option<i8>`（ `Option<T>` ）的时候需要担心可能没有值，而编译器会确保我们在使用值之前处理了为空的情况。也就是说，在对 `Option<T>` 进行 `T` 的运算之前必须将其转换为 `T`，这将帮助我们捕获到空值最常见的问题之一：假设某值不为空但实际上为空的情况。
+得到错误：
 
-简而言之：
+```shell
+error[E0277]: the trait bound `i8: std::ops::Add<std::option::Option<i8>>` is
+not satisfied
+ -->
+  |
+5 |     let sum = x + y;
+  |                 ^ no implementation for `i8 + std::option::Option<i8>`
+  |
+```
 
-- 为了拥有一个可能为空的值，必须显式将其放入对应类型的 `Option<T>` 中，当使用这个值时，必须明确的处理值为空的情况。
-- 只要一个值不是 `Option<T>` 类型，就可以安全的认定它的值不为空
+错误信息表明 Rust 不清楚如何将 `Option<i8>` 与 `i8` 相加，因为它们是不同的类型。在 Rust 中，当有一个像 `i8` 这样类型的值时，编译器会确保该值总是有效，可放心对其进行处理而无需在使用前进行空值检查。只有在使用 `Option<i8>`（ `Option<T>` ）的时候需要考虑可能没有值的情况，而编译器会确保我们在使用它之前处理了值为空的情况。
 
-Rust 正是通过这样的设计决策，来限制空值的泛滥以增加 Rust 代码的安全性。
+也就是说，在对 `Option<T>` 进行 `T` 的运算之前必须将其转换为 `T`，通常这有助于捕获到空值最常见的问题之一：假设某值不为空但实际上为空的情况。
 
-### 获取 `Some` 成员的值
+简言之：
 
-使用 `Option<T>` 的值，需要编写处理每个成员的代码。一些代码只当拥有 `Some(T)` 值时运行，允许这些代码使用其中的 `T`，一些代码在值为 `None` 时运行，这些代码并没有一个可用的 `T` 值。
+- 使用一个可能为空的值时，必须将其转换为对应类型的 `Option<T>` ，之后在使用时，Rust 会要求显式处理值为空的情况。
+- 当一个值不是 `Option<T>` 类型，就可以安全的认定其值不为空。
+
+Rust 通过这个审慎的设计决定，来限制空值的泛滥以增加代码安全性。
+
+### 使用 `Some` 变体中的值
 
 参考 [Option 文档](https://doc.rust-lang.org/std/option/enum.Option.html)
+
+通常，为了使用 `Option<T>` 中的值，需要编写处理每个变体的代码。一些代码在处理 `Some(T)` 时运行，被允许使用其中的 `T` 值，另一些代码在处理 `None` 时运行，没有一个可用的 `T` 值。`match` 表达式就是可以进行这种处理的一种流控制结构。
 
 ## 使用 `match` 表达式处理枚举
 
