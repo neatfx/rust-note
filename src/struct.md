@@ -1,22 +1,25 @@
 # 结构体
 
-结构体（ Struct ）用来组织相关连的数据，创建自定义类型。通过结构体可以将相关联的数据片段联系起来并命名它们，使代码更加清晰。
+自定义数据类型，使用结构体（ Struct ）可以将多个相关的数据命名打包到一起作为一个有意义的组，类似 OOP 中对象的数据属性。
 
-通过定义结构体方法允许为结构体实例指定行为。
+通过定义结构体方法、关联函数可以为结构体数据指定关联的行为。
+
+结构体和枚举作为组成块用于在程序中创建新类型并获得完整的 Rust 编译时类型检查支持。
 
 关联函数则将特定功能置于结构体的命名空间中而无需结构体实例。
 
+## 结构体定义及实例化
+
 与 `Tuple` 比较：
 
-- 两者都可以包含多种类型
-- 结构体成员需要命名，因此对成员的访问也更灵活，而 `Tuple` 只能依赖顺序访问成员
-
-## 结构体定义及实例化
+- 两者都可以包含多种数据类型
+- 结构体所包含的数据需要命名以明确其含义，因而比 `Tuple` 更为灵活：不依赖顺序即可指定或访问实例成员的值。
 
 ### 定义结构体
 
 ```rust
 struct User {
+    // 以下 name：type 通常被称之为 “fields”
     username: String,
     email: String,
     sign_in_count: u64,
@@ -26,6 +29,8 @@ struct User {
 
 ### 结构体实例的创建、更新
 
+#### 创建结构体实例
+
 ```rust
 let user1 = User {
     email: String::from("someone@example.com"),
@@ -34,6 +39,8 @@ let user1 = User {
     sign_in_count: 1,
 };
 ```
+
+注：实例化时各字段无需保持结构体定义的字段顺序
 
 #### 创建可变的结构体实例
 
@@ -46,38 +53,12 @@ let mut user2 = User {
     active: true,
     sign_in_count: 1,
 };
-```
 
-#### 使用结构体更新语法从其他实例创建实例
-
-```rust
-let user3 = User {
-    email: String::from("another@example.com"),
-    username: String::from("anotherusername567"),
-    active: user1.active,
-    sign_in_count: user1.sign_in_count,
-};
-```
-
-#### 使用 `..` 语法从其他实例创建实例
-
-```rust
-let user4 = User {
-    email: String::from("another@example.com"),
-    username: String::from("anotherusername567"),
-    ..user1
-};
-```
-
-#### 更新结构体实例
-
-此操作的前提是结构体实例必须是可变的
-
-```rust
+// 更新实例
 user2.email = String::from("anotheremail@example.com");
 ```
 
-### 使用函数创建结构体实例
+#### 使用表达式从函数体中创建结构体实例
 
 ```rust
 fn build_user(email: String, username: String) -> User {
@@ -103,28 +84,49 @@ fn build_user(email: String, username: String) -> User {
 }
 ```
 
-### 元组结构体（ tuple structs ）
+#### 使用结构体更新语法从其他结构体实例创建实例
 
-元组结构体没有具体的字段名，只有字段的类型
+```rust
+let user3 = User {
+    email: String::from("another@example.com"),
+    username: String::from("anotherusername567"),
+    active: user1.active,
+    sign_in_count: user1.sign_in_count,
+};
+```
 
-每一个结构体都有独立不同的类型，即使结构体中的字段类型相同
+#### 使用 `..` 语法从其他实例隐式获取剩余字段的值创建实例
 
-可以将元组结构体解构为单独的值，也可以使用 `.` 语法通过索引访问单独的值
+```rust
+let user4 = User {
+    email: String::from("another@example.com"),
+    username: String::from("anotherusername567"),
+    ..user1 // 从 user1 获取 active & sign_in_count 字段的值
+};
+```
+
+### 元组结构体（ Tuple Structs ）
+
+元组结构体的字段不具名，只包含字段类型。
+
+当需要将一个元组命名并使具有与其它元组不同的类型，同时在常规结构体中为每个字段命名又很繁琐多余的情况下，元组结构体非常有用。
 
 ```rust
 struct Color(i32, i32, i32);
 struct Point(i32, i32, i32);
 
-// black 和 origin 值的类型不同，因为它们是不同元组结构体的实例。
+// black 和 origin 值的类型不同，因为它们是不同元组结构体的实例。每一个定义的结构体都是它自身的类型，即使它们拥有相同类型的字段。
 let black = Color(0, 0, 0);
 let origin = Point(0, 0, 0);
 ```
 
-### 类单元结构体（ unit-like structs ）
+元组结构体实例表现的很像元组，可将其解构，也可使用 `.` 语法通过索引访问其中个别值。
 
-没有任何字段的结构体被称为类单元结构体，用于在类型上实现特质但不需要在类型中存储数据的情况
+### 类单元结构体（ Unit-Like Structs ）
 
-#### 结构体数据的所有权
+没有任何字段的结构体被称为类单元结构体，因为其表现与 `()` 类似。当需要在某些类型上实现特质但不需要在其中存储数据时，类单元结构体非常有用。
+
+### 结构体数据的所有权
 
 1、使用了自身拥有所有权的 `String` 类型，结构体拥有所有数据，只要整个结构体是有效的，其拥有的数据亦同样有效：
 
@@ -137,7 +139,7 @@ struct User {
 }
 ```
 
-2、当结构体中存储了引用（ 下例中为 `&str` ）类型时，需要指定生命周期（ lifetimes ），生命周期能够确保结构体引用的数据的有效性跟结构体本身保持一致。尝试在结构体中存储一个引用而不指定生命周期将是无效的：
+2、当结构体中存储了引用（ 下例中为 `&str` ）类型时，需要指定生命周期（ lifetimes ），生命周期能够确保结构体引用的数据的有效性跟结构体本身保持一致。尝试在结构体中存储一个引用而不指定生命周期，代码会得到编译时错误：
 
 ```rust
 struct User {
@@ -159,7 +161,7 @@ fn main() {
 
 编译时错误：
 
-```rust
+```shell
 error[E0106]: missing lifetime specifier
  -->
   |
@@ -173,12 +175,16 @@ error[E0106]: missing lifetime specifier
   |            ^ expected lifetime parameter
 ```
 
-## 定义方法
+注：如何修复错误请参考 “生命周期” 有关章节
+
+## 结构体方法
 
 方法和函数都使用 `fn` 关键字和名称声明，有参数和返回值，两者的不同之处：
 
-- 方法在上下文中（ 结构体、枚举、特质对象 ）被定义
+- 方法定义于结构体（或者枚举、特质对象）的上下文中
 - 方法的第一个参数总是 `self`，代表调用该方法的结构体实例
+
+### 定义结构体方法
 
 ```rust
 #[derive(Debug)]
@@ -187,6 +193,7 @@ struct Rectangle {
     height: u32,
 }
 
+// &self 相当于 rectangle: &Rectangle
 impl Rectangle {
     fn area(&self) -> u32 {
         self.width * self.height
@@ -207,7 +214,23 @@ fn main() {
 
 如果想要在方法中改变调用方法的实例，需要将第一个参数改为 `&mut self` 的形式。
 
-### 带有更多参数的方法
+#### `->` 操作符
+
+在 C、C++ 语言中，有两种用于方法调用的操作符：
+
+- `.` 用于在对象上直接调用方法
+- `->` 用于在指向对象（需要先解引用）的指针上调用方法，`object -> fn()` 相当于 `(*object).fn()`
+
+Rust 中没有类似 `->` 的操作符，是因为 Rust 具有 “automatic referencing and dereferencing” 特性。方法调用正是 Rust 中具备该特性的几处地方之一。
+
+当使用 `object.something()` 进行方法调用时，Rust 会自动添加 `&`, `&mut`, 或者 `*` ，以便于 `object` 能够匹配方法签名。因此，以下代码是等效的：
+
+```rust
+p1.distance(&p2);
+(&p1).distance(&p2);
+```
+
+#### 具有多个参数的结构体方法
 
 ```rust
 #[derive(Debug)]
@@ -239,11 +262,9 @@ fn main() {
 }
 ```
 
-## 定义关联函数
+## 结构体关联函数
 
-在 `impl` 块中定义的不以 `self` 作为参数的函数被称为关联函数（ associated functions ）
-
-关联函数与结构体相关联，并不作用于结构体实例，因此是函数而不是方法。
+在 `impl` 块中定义的不以 `self` 作为参数的函数被称为关联函数（ Associated Functions ）。关联函数与结构体相关联，并不作用于结构体实例，因此是函数而不是方法。
 
 关联函数的调用语法 - [结构体名]::[关联函数名]
 
@@ -265,7 +286,7 @@ fn main {
 }
 ```
 
-## 多个 `impl` 块
+### 多个 `impl` 块
 
 ```rust
 #[derive(Debug)]
@@ -286,3 +307,5 @@ impl Rectangle {
     }
 }
 ```
+
+注： 如示例代码演示，通常没有必要将方法分离到多个 `impl` 中，不过这种语法是有效的。在后续介绍泛型、特质的章节将会遇到多个`impl`块发挥作用的场景。
