@@ -278,7 +278,7 @@ fn calculate_length(s: String) -> (String, usize) {
 
 ### 引用
 
-使用 `&` 符号表示引用（ References ），引用允许使用值但不获取其所有权。与引用相反的操作是解引用（ Dereferencing ），使用解引用运算符 `*` 表示。
+`&` 符号表示引用（ References ），引用允许使用值但不获取其所有权。与引用相反的操作是解引用（ Dereferencing ），使用解引用运算符 `*` 表示。
 
 引用在默认情况下是不可变的。
 
@@ -286,23 +286,23 @@ fn calculate_length(s: String) -> (String, usize) {
 fn main() {
     let s1 = String::from("hello");
 
-    let len = calculate_length(&s1); // `&s1` 语法创建一个指向值 `s1` 的引用
+    let len = calculate_length(&s1); // `&s1` 语法会创建一个指向 s1 的值的引用，但不拥有值的所有权，所以值在引用离开作用域的时候不会被释放
 
     println!("The length of '{}' is {}.", s1, len);
 }
-// 参数 s 只是指向值 `s1` 的引用，并不拥有引用值的所有权
+// 参数 s 是一个指向 `s1` 的值（String）的引用，并不拥有值的所有权
 fn calculate_length(s: &String) -> usize {
     s.len()
-} // 引用 s 离开作用域，不会有特殊操作（ drop ），其指向的值不会被丢弃
+} // 引用 s 离开作用域，由于它不拥有其指向的值的所有权，因此什么都不会发生
 ```
 
 <img src="images/ownership/trpl04-05.svg" />
 
-当函数使用引用而不是实际值作为参数，无需返回值来交还所有权，因为其不曾拥有所有权。
+当函数使用引用而不是实际值作为参数，就不需要再通过返回值来交还所有权，因为函数未曾获得过值的所有权。
 
 ### 借用（ Borrowing ）
 
-借用是指获取引用作为函数参数的行为，在借用期间不允许修改引用（ 默认不可变 ）的值。
+获取引用作为函数参数被称作借用，借用期间不允许修改被借用的值（ 引用和变量一样默认是不可变的 ）。
 
 ```rust
 fn main() {
@@ -328,7 +328,7 @@ error[E0596]: cannot borrow immutable borrowed content `*some_string` as mutable
 
 ### 可变引用
 
-使用可变引用可以实现修改引用的值：
+使用可变引用可以实现修改借用值：
 
 ```rust
 fn main() {
@@ -342,7 +342,7 @@ fn change(some_string: &mut String) {
 }
 ```
 
-不过，可变引用有一个很大的限制：**在特定作用域中的特定数据有且只能有一个可变引用**。
+不过，可变引用有一个很大的限制：**特定作用域中的特定数据有且只能有一个可变引用**。以下是错误代码代码示例：
 
 ```rust
 let mut s = String::from("hello");
@@ -353,7 +353,7 @@ let r2 = &mut s;
 println!("{}, {}", r1, r2);
 ```
 
-运行代码：
+错误信息：
 
 ```shell
 error[E0499]: cannot borrow `s` as mutable more than once at a time
@@ -371,9 +371,9 @@ error[E0499]: cannot borrow `s` as mutable more than once at a time
 
 - 两个或更多指针同时访问同一数据
 - 至少有一个指针被用来写入数据
-- 没有同步数据访问的机制
+- 缺少同步访问数据的机制
 
-数据竞争会导致程序出现难以捕捉的异常行为，修复起来很困难，而存在数据竞争的代码在 Rust 中根本无法通过编译，从而也就避免了此类问题的发生！
+数据竞争会导致程序运行时出现难以跟踪捕捉的不确定行为，修复起来很困难，而在 Rust 中存在数据竞争的代码根本无法通过编译，从而也就避免了此类问题的发生！
 
 同一变量存在多个可变引用（ 实际上并非同时引用 ）：
 
@@ -388,7 +388,7 @@ let mut s = String::from("hello");
 let r2 = &mut s;
 ```
 
-同一变量不能在拥有不可变引用的同时拥有可变引用，以下代码会导致编译时错误：
+同一变量不能在拥有不可变引用的同时拥有可变引用，以下代码不会通过编译：
 
 ```rust
 let mut s = String::from("hello");
@@ -400,7 +400,7 @@ let r3 = &mut s; // BIG PROBLEM
 println!("{}, {}, and {}", r1, r2, r3);
 ```
 
-错误如下：
+错误信息：
 
 ```shell
 error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
@@ -416,13 +416,27 @@ error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immuta
   |                            -- borrow later used here
 ```
 
-尽管以上限制容易引发错误造成困扰，但是 Rust 编译器能够在编译时准确地指出代码中的潜在问题，不仅帮助更快的处理错误，更避免了把这些难以跟踪的错误放到运行时解决。
+对比之前的示例代码，注意观察引用的作用域范围，以下代码是可以正常通过编译的：
+
+```rust
+let mut s = String::from("hello");
+
+let r1 = &s; // no problem
+let r2 = &s; // no problem
+println!("{} and {}", r1, r2);
+// r1 and r2 are no longer used after this point
+
+let r3 = &mut s; // no problem
+println!("{}", r3);
+```
+
+尽管以上诸多限制引发的错误容易造成困扰，但是 Rust 编译器能够提前在编译时报错并指出问题具体在哪儿，也避免了把这些难以跟踪的错误留到运行时解决。
 
 ## 悬垂引用
 
 在有指针的语言中，释放内存的同时如果还存在指向该内存的指针，则很容易形成悬垂指针。
 
-在 Rust 中，编译器确保引用永远不会变成悬垂状态，即不会有悬垂引用（ Dangling References ）。引用一旦开始，编译器会确保引用的数据不会在引用之前离开作用域。
+在 Rust 中，编译器会确保引用永远不会变成悬垂状态，即不会有悬垂引用（ Dangling References ）。引用一旦开始，编译器会确保引用的数据不会在引用之前离开作用域。
 
 ```rust
 fn main() {
@@ -437,7 +451,7 @@ fn dangle() -> &String { // dangle 函数返回一个字符串的引用
 } // s 离开作用域，并被丢弃，其内存被释放，reference_to_nothing 成为悬垂引用
 ```
 
-运行代码：
+无法通过编译：
 
 ```shell
 error[E0106]: missing lifetime specifier
@@ -454,7 +468,7 @@ error[E0106]: missing lifetime specifier
 修正代码：
 
 ```rust
-// 直接返回 `String` ，所有权被移出函数，没有值被释放，没有悬垂引用。
+// 直接返回 `String` ，所有权被移出函数，没有值被释放，不会产生悬垂引用。
 fn no_dangle() -> String {
     let s = String::from("hello");
 
@@ -464,7 +478,7 @@ fn no_dangle() -> String {
 
 ## 引用规则
 
-- 在任意给定时间，要么只能有一个可变引用，要么只能有多个不可变引用
+- 在任意给定时间，要么只有一个可变引用，要么只能有多个不可变引用
 - 引用必须总是有效
 
 ## `Slice` 类型
@@ -475,17 +489,15 @@ fn no_dangle() -> String {
 
 ```rust
 // 因为不需要获取所有权，所以参数类型为 &String
-// 暂时没有获取部分字符串的方法，所以使用 &str 代替，返回单词结尾的索引
+// 暂时没有表示部分字符串的方法，使用返回找到的单词的尾部索引来代替
 fn first_word(s: &String) -> usize {
     let bytes = s.as_bytes(); // 将 String 转化为字节数组
 
-    // iter 方法返回集合中的每一个元素，enumerate 则包装 iter 的结果并返回一个元组
-    // 元组的第一个元素是索引，第二个元素是集合中元素的引用
-    // 在 for 循环中，指定模式，元组中的 i 是索引，元组中的 &item 是单个字节
+    // 使用迭代器遍历集合中的元素并进行包装，返回元组形式（元组第一个元素是索引，第二个元素是集合中元素的引用）
+    // 在 for 循环中指定模式，元组中的 i 是索引，元组中的 &item 是单个字节
     // 因为从 .iter().enumerate() 中获取了集合元素的引用，所以模式中使用 &
     for (i, &item) in bytes.iter().enumerate() {
-        // 通过字节的字面值语法来寻找代表空格的字节。如果找到空格，返回其位置。
-        // 否则，使用 s.len() 返回字符串的长度
+        // 通过字节的字面值语法来寻找代表空格的字节。如果找到空格，返回其位置，否则返回字符串的长度
         if item == b' ' {
             return i;
         }
@@ -496,18 +508,17 @@ fn first_word(s: &String) -> usize {
 
 fn main() {
     let mut s = String::from("hello world");
-
     let word = first_word(&s); // word 的值为 5
 
     s.clear(); // 清空字符串，使其等于 ""
 
     // 函数调用结束后，`word` 与 `s` 不再关联，`word` 值不会跟随 `s` 的值变化
-    // word 在此处的值仍然是 5
-    // 但是如果尝试用值 5 来提取变量 s 的第一个单词，将会产生 BUG，因为此时 s 的内容已经改变！
+    // word 此时的值仍然为 5
+    // 问题：此时尝试用值 5 （索引值）来提取变量 s 的第一个单词，将会产生 BUG，因为此时 s 的内容已经改变！
 }
 ```
 
-如果函数可以返回 `s` 的部分引用，就可以实现 `word` 与 `s` 保持关联。
+如果函数可以返回 `s` 的部分引用，就可以实现 `word` 与 `s` 保持同步关联。
 
 ### 字符串 Slice
 
@@ -562,7 +573,7 @@ let slice = &s[0..len];
 let slice = &s[..];
 ```
 
->注意：字符串 slice range 的索引必须位于有效的 UTF-8 字符边界内，如果尝试从一个多字节字符的中间位置创建字符串 slice，则程序将会因错误而退出。出于介绍字符串 slice 的目的，本部分假设只使用 ASCII 字符集；第八章的 “使用字符串存储 UTF-8 编码的文本” 部分会更加全面的讨论 UTF-8 处理问题。
+>注意：字符串 slice range 的索引必须位于有效的 UTF-8 字符边界内，如果尝试从一个多字节字符的中间位置创建字符串 slice，则程序将会因错误而退出。出于介绍字符串 slice 的目的，本部分假设只使用 ASCII 字符集； UTF-8 的处理问题可以参考 “集合” 章节中的 “使用字符串存储 UTF-8 编码的文本” 部分。
 
 使用字符串 `slice` 重写 `first_word` 函数：
 
@@ -579,25 +590,20 @@ fn first_word(s: &String) -> &str {
 
     &s[..]
 }
-```
 
-函数调用：
-
-```rust
 fn main() {
     let mut s = String::from("hello world");
 
     let word = first_word(&s); // &s 为不可变引用
 
-    // 因为 clear 需要清空 String
-    // 它尝试获取 s 的可变引用，而 s 已经有一个不可变引用，这违反了借用规则，因此失败了。
+    // 清空 String 的操作需要先获取 s 的可变引用，而在这之前 s 已经有一个不可变引用，此时违反借用规则，代码无法通过编译！
     s.clear(); // error!
 
     println!("the first word is: {}", word);
 }
 ```
 
-得到编译错误：
+编译错误信息：
 
 ```shell
 error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
@@ -615,11 +621,9 @@ error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immuta
 
 对比两个版本的 `first_word` 函数：
 
-之前版本的代码可以编译，但当使用之前获取的索引访问已经发生变化的字符串时，问题才会出现。
+之前版本的代码可以编译，但当使用之前获取的索引访问已经发生变化的字符串时，问题才会出现。而 `Slice` 版本的函数，不仅代码更加简单通用，Rust 编译器还会指出借用错误。
 
-而 `Slice` 版本的函数，不仅代码更加简单通用，Rust 编译器还会提醒潜在的借用错误。
-
-#### 字符串字面值就是 `Slice`
+#### 字符串字面值与 `Slice`
 
 ```rust
 let s = "Hello, world!"; // 不可变引用类型 `&str`
@@ -629,15 +633,8 @@ let s = "Hello, world!"; // 不可变引用类型 `&str`
 
 #### 字符串 slice 作为参数
 
-再次改进 `first_word` 函数：
-
 ```rust
-// 可以接受 String 值和 &str 值作为参数，函数变得更加通用
-// 字符串 slice 可以直接作为参数，如果有一个 String，则可以传递整个 String 的 slice
-fn first_word(s: &str) -> &str {
-```
-
-```rust
+// 支持 String（整个 String 的 slice） 及 &str 类型参数，函数更加通用
 fn first_word(s: &str) -> &str {
     let bytes = s.as_bytes();
 
@@ -653,16 +650,15 @@ fn first_word(s: &str) -> &str {
 fn main() {
     let my_string = String::from("hello world");
 
-    // first_word 中传入 `String` 的 slice
+    // `String` 的 slice 作为参数
     let word = first_word(&my_string[..]);
 
     let my_string_literal = "hello world";
 
-    // first_word 中传入字符串字面值的 slice
+    // 字符串字面值的 slice 作为参数
     let word = first_word(&my_string_literal[..]);
 
-    // 因为字符串字面值 **就是** 字符串 slice，
-    // 这样写也可以，即不使用 slice 语法！
+    // 字符串字面值作为参数（字符串字面值本身即是 slice，因此不使用 slice 语法直接传参也可以）
     let word = first_word(my_string_literal);
 }
 ```
@@ -674,13 +670,15 @@ fn main() {
 ```rust
 let a = [1, 2, 3, 4, 5];
 
-let slice = &a[1..3]; // slice 的类型是 `&[i32]`
+let slice = &a[1..3]; // 此 slice 的类型为 `&[i32]`
 ```
 
-数组 `slice` 与字符串 `slice` 的工作方式相同，即存储第一个集合元素的引用和一个集合总长度。可以对其他所有集合使用这类 `Slice`。
+此 `slice` 与字符串 `slice` 的工作方式相同，即存储集合中部分连续元素的引用（首元素和长度）。其他各种集合类型都会用到此类 `Slice`。
 
 ## 小结
 
-借助于所有权、借用、`Slice` 这些概念， Rust 在编译时确保内存安全。
+Rust 程序中的所有权、借用、`Slice` 概念在编译时确保内存安全。
 
-Rust 使用与其他系统编程语言相同的方式来申请、操作内存，但同时具备在数据所有者离开作用域后自动清除其数据的功能，这意味着无须额外编写、调用与内存回收相关的代码。
+Rust 使用与其他系统编程语言相同的方式来申请、操作内存，此外，还具备数据持有者在离开作用域后自动清除其数据的功能，这意味着无须额外编写、调用与内存回收相关的代码。
+
+Rust 语言中其它诸多方面的运作方式都受所有权系统的影响。
