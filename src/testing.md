@@ -10,28 +10,45 @@ Rust 设计时即高度重视程序正确性。但是正确性非常复杂，证
 
 ## 如何编写测试
 
-Rust 中的测试是一个带有 `test` 属性注解的函数
+测试是用于验证非测试代码以预期方式工作的 Rust 函数。典型的，测试函数的函数体执行以下三种操作：
 
-将一个函数变成测试函数，需要在 `fn` 行之前添加元数据属性注解 `#[test]`
+- 设置需要的数据或状态
+- 运行测试代码
+- 断言测试结果符合预期
 
-运行 `cargo test` 命令后，Rust 会构建测试执行程序来调用测试函数，并报告测试结果。
+Rust 为使用这些操作编写测试特别提供了支持，包括 `test` 属性，一些宏以及 `should_panic` 属性。
+
+### 剖析测试函数
+
+Rust 中的最简单的测试即一个带有 `test` 属性注解的函数。属性是与一块 Rust 代码相关的元数据。将一个普通函数窗转换为测试函数，在 `fn` 行之前添加元数据属性注解 `#[test]` 即可。当运行 `cargo test` 命令后，Rust 会构建一个测试执行程序来运行带有 `test` 属性的测试函数，并报告测试结果。
+
+使用 Cargo 新建一个库项目时，会自动生成一个包含测试函数的测试模块。此模块使得在每次开始新项目的时候，无需翻查详细的测试函数结构及语法即可以开始编写测试。可以添加任意数量的额外测试函数及测试模块。
+
+创建一个新的库项目：
+
+```shell
+$ cargo new adder --lib
+     Created library `adder` project
+$ cd adder
+```
+
+文件 “adder/src/lib.rs” 的内容：
 
 ```rust
-# fn main() {}
 #[cfg(test)] // 元数据属性注解
 mod tests {
-    #[test] // 元数据属性注解
+    #[test] // 元数据属性注解，表明 it_works 函数是一个测试函数
     fn it_works() {
-        assert_eq!(2 + 2, 4);
+        assert_eq!(2 + 2, 4); // 使用宏对逻辑进行断言
     }
 
-    // tests 模块中同时包含非测试的函数来提供辅助功能
+    // tests 模块中也可以包含非测试函数帮助对常见情况进行设置或者运行常见操作
     fn helper() {
     }
 }
 ```
 
-运行测试：
+`cargo test` 命令会运行项目中的所有测试：
 
 ```shell
 $ cargo test
@@ -53,27 +70,94 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
 
 ### 测试结果
 
-包含代码测试结果、 文档测试（ `Doc-tests` ）结果两部分
+Cargo 编译并运行测试。在 `Compiling`, `Finished` 以及 `Running` 之后是 `running 1 test` 行。再下一行则显示了生成的测试函数名 `it_works` 以及测试结果 `ok`。测试运行结果的整体概要紧跟其后。`test result: ok.` 表示所有的测试都通过了，`1 passed; 0 failed` 部分统计了测试通过或失败的数目。
+
+由于现在还没有被标记为忽略的测试，所以测试结果中显示的是 `0 ignored`。同样的，没有被过滤的测试，所以测试结果中显示的是 `0 filtered out.`。
+
+`0 measured` 统计数据用于测量性能的基准测试。基准测目前仅在 nightly 版本的 Rust 可用。参见 [the documentation about benchmark tests](https://doc.rust-lang.org/unstable-book/library-features/test.html)
+
+测试输出中以 `Doc-tests adder` 开头的部分，是所有文档测试的结果。当前还没有文档测试，不过 Rust 会编译出现在 API 文档中的所有代码示例。这个功能有助于文档以及其中的代码保持同步。详情参见[“Documentation Comments as Tests”](https://doc.rust-lang.org/book/ch14-02-publishing-to-crates-io.html#documentation-comments-as-tests)，此处暂时忽略对 `Doc-tests` 输出的介绍。
+
+总结一下，测试结果包含代码测试结果、 文档测试结果两部分：
 
 #### 代码测试结果
 
 - `passed` 通过
 - `failed` 失败
 - `ignored` 忽略
-- `measured` 针对性能测试的，目前仍只能用于 Nightly Rust
+- `measured` 针对性能基准测试，目前仅 Nightly 版本 Rust 可用
 - `filtered` 过滤
 
 #### 文档测试结果
 
-Rust 会编译任何在 API 文档中的代码示例，使文档和代码保持同步
+Rust 会编译 API 文档中的代码示例，使文档和代码保持同步
+
+#### 不同测试场景示例 - 改变测试函数签名
+
+```rust
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn exploration() {
+        assert_eq!(2 + 2, 4);
+    }
+}
+```
+
+输出：
+
+```shell
+running 1 test
+test tests::exploration ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+```
+
+#### 不同测试场景示例 - 包含失败情况的多个测试
+
+```rust
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn exploration() {
+        assert_eq!(2 + 2, 4);
+    }
+
+    #[test]
+    fn another() {
+        // 当测试函数中出现 Panic 时，测试失败
+        // 主线程观察到某个测试线程失活，测试将会被标记为失败
+        panic!("Make this test fail");
+    }
+}
+```
+
+输出：
+
+```shell
+running 2 tests
+test tests::exploration ... ok
+test tests::another ... FAILED
+
+failures:
+
+---- tests::another stdout ----
+thread 'tests::another' panicked at 'Make this test fail', src/lib.rs:10:9
+note: Run with `RUST_BACKTRACE=1` for a backtrace.
+
+failures:
+    tests::another
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out
+
+error: test failed
+```
 
 ### 使用 assert! 宏检查结果
 
-`assert!` 宏由标准库提供，在希望确保测试中一些条件为 `true` 时非常有用。
+`assert!` 宏由标准库提供，在希望确保测试中某些情况为 `true` 时非常有用。使用 `assert!` 宏需要提供一个求值为布尔值的参数。如果值为 `true`，`assert!` 宏什么也不做，测试通过。如果值为 `false`，`assert!` 宏将调用会造成测试失败的 `panic!` 宏。`assert!` 宏用于检查代码是否以预期的方式运行。
 
-需要向 `assert!` 宏提供一个求值为布尔值的参数。
-
-如果参数为 `true`，`assert!` 什么也不做，测试通过。如果参数为 `false`，`assert!` 将调用 `panic!` 宏，测试失败。`assert!` 宏用于检查代码是否以期望的方式运行。
+文件 `src/lib.rs` 内容：
 
 ```rust
 #[derive(Debug)]
@@ -89,8 +173,9 @@ impl Rectangle {
 }
 
 #[cfg(test)]
+// 内部模块 “tests”
 mod tests {
-    use super::*;
+    use super::*; // 将 tests 模块外的代码引入作用域
 
     #[test]
     fn larger_can_hold_smaller() {
@@ -98,6 +183,13 @@ mod tests {
         let smaller = Rectangle { length: 5, width: 1 };
 
         assert!(larger.can_hold(&smaller));
+    }
+
+    #[test]
+    fn smaller_cannot_hold_larger() {
+        let larger = Rectangle { length: 8, width: 7 };
+        let smaller = Rectangle { length: 5, width: 1 };
+
         assert!(!smaller.can_hold(&larger)); // 注意此处的取反操作
     }
 }
@@ -113,17 +205,17 @@ test tests::larger_can_hold_smaller ... ok
 test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
 ```
 
-引入 BUG：
+修改代码引入 BUG 之后：
 
 ```rust
 impl Rectangle {
     pub fn can_hold(&self, other: &Rectangle) -> bool {
-        self.length < other.length && self.width > other.width
+        self.width < other.width && self.length > other.length
     }
 }
 ```
 
-测试结果：
+运行结果：
 
 ```shell
 running 2 tests
@@ -143,7 +235,7 @@ failures:
 test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out
 ```
 
-### 测试相等
+### 使用 `assert_eq!` 宏、 `assert_ne!` 宏测试相等
 
 - 传递给 `assert_eq!` 宏的两个值相等时测试通过，反之失败
 - 传递给 `assert_ne!` 宏的两个值不相等时测试通过，反之失败
@@ -165,17 +257,51 @@ mod tests {
 }
 ```
 
-`assert_eq!` 和 `assert_ne!` 宏在底层分别使用了 `==` 和 `!=`。当断言失败时，这些宏会使用调试格式打印出其参数，这意味着被比较的值必需实现了 `PartialEq` 和 `Debug` 特质。
+```shell
+running 1 test
+test tests::it_adds_two ... ok
 
-所有的基本类型和大部分标准库类型都实现了这些特质。
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+```
 
-对于自定义的结构体和枚举，需要实现 `PartialEq` 才能断言他们的值是否相等。需要实现 `Debug` 才能在断言失败时打印他们的值。因为这两个特质都是派生特质，通常可以直接在结构体或枚举上添加 `#[derive(PartialEq, Debug)]` 注解。
+引入 BUG：
 
-### 自定义失败信息
+```rust
+fn main() {}
+pub fn add_two(a: i32) -> i32 {
+    a + 3
+}
+```
 
-可以向 `assert!`、`assert_eq!` 和 `assert_ne!` 宏传递包含自定义失败信息的可选参数，可选参数被传递给 `format!` 宏处理，所以可以传递一个包含 {} 占位符的格式字符串和需要放入占位符的值，自定义失败信息将在测试失败时被打印。
+运行结果：
 
-自定义失败信息有助于标记断言的意义，当测试失败时也更容易分析问题原因。
+```shell
+running 1 test
+test tests::it_adds_two ... FAILED
+
+failures:
+
+---- tests::it_adds_two stdout ----
+thread 'tests::it_adds_two' panicked at 'assertion failed: `(left == right)`
+  left: `4`,
+ right: `5`', src/lib.rs:11:9
+note: Run with `RUST_BACKTRACE=1` for a backtrace.
+
+failures:
+    tests::it_adds_two
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out
+```
+
+其他语言和测试框架中，用来比较两个值相等的函数参数被称为 `expected` 和 `actual`，其命名顺序取决于指定参数的方式。在 Rust 中，它们被称为 `left` 以及 `right`，其命名顺序为期望值与测试代码生成的不相符的值。如果将比较代码写成 `assert_eq!(add_two(2), 4)`，那么测试失败信息将会显示 `assertion failed: (left == right)`， `left` 为 5，`right` 为 4。
+
+`assert_ne!` 宏则会在两个值不相等的时候通过，相等的时候失败。适用于不确定会得到什么值但是确定代码按预期运行肯定不会得到某个值的情况。
+
+`assert_eq!` 和 `assert_ne!` 宏在底层分别使用了 `==` 和 `!=`。当断言失败时，这些宏会使用调试格式打印出其参数，这意味着被比较的值必需实现了 `PartialEq` 和 `Debug` 特质。所有基本类型及大部分标准库类型都实现了这些特质。对于自定义的结构体和枚举，需要实现 `PartialEq` 才能断言它们的值是否相等。需要实现 `Debug` 才能在断言失败时打印它们的值。因为这两个特质都是派生特质，通常可以通过直接在自定义结构体或枚举上添加 `#[derive(PartialEq, Debug)]` 注解。具体细节可参考 [Derivable Traits](https://doc.rust-lang.org/book/appendix-03-derivable-traits.html)
+
+### 添加自定义失败信息
+
+可以向 `assert!`、`assert_eq!` 和 `assert_ne!` 宏传递包含自定义失败信息的可选参数，可选参数被传递给 `format!` 宏处理，所以可以传递一个包含 `{}` 占位符的格式字符串和需要放入占位符的值，自定义失败信息将在测试失败时被打印。自定义失败信息有助于记录断言的意义，当测试失败时可以更好的分析代码中的问题。
 
 ```rust
 # fn main() {}
@@ -248,11 +374,11 @@ contain name, value was `Hello!`', src/lib.rs:12:8
 note: Run with `RUST_BACKTRACE=1` for a backtrace.
 ```
 
-此时在测试输出中可以看到自定义失败信息结果，这将帮助我们理解失败的原因。
+此时在测试输出中可以看到自定义失败信息，这有助于我们理解测试失败的具体原因。
 
 ### 使用 `should_panic` 检查 panic
 
-除了测试代码是否返回期望值之外，测试代码是否按照期望处理错误也很重要。
+除了测试代码是否返回期望值之外，测试代码是否按预期处理错误也很重要。
 
 可通过为函数增加属性 `should_panic` 来实现此类测试，`should_panic` 属性在函数中的代码 `panic` 时会通过，反之失败。
 
@@ -326,9 +452,9 @@ failures:
 test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out
 ```
 
-尽管测试结果失败，意味着被测试函数并没有产生 `panic`
+测试结果失败，也没有得到有用的信息，但是当我们观察测试函数时，会看到它使用了 `#[should_panic]` 注解，这表明被测试函数并没有引发 `panic`。
 
-`should_panic` 测试结果的含义可能很模糊，它只是表明代码没有产生 `panic`，甚至在由一些非期望的原因导致 `panic` 时也会通过，为了使 `should_panic` 测试结果更精确，可以给 `should_panic` 属性增加一个可选的 `expected` 参数，测试工具会确保错误信息中包含其提供的信息。
+使用 `should_panic` 的测试函数的含义比较模糊，它仅仅表明代码会引发某种 `panic`，甚至在由于不同原因导致测试 `panic` 时 `should_panic` 测试也会通过，为了使 `should_panic` 测试结果更精确，可以给 `should_panic` 属性增加一个可选的 `expected` 参数，这种测试约束会确保错误信息中包含其提供的文本信息。
 
 ```rust
 pub struct Guess {
@@ -338,10 +464,10 @@ pub struct Guess {
 impl Guess {
     pub fn new(value: i32) -> Guess {
         if value < 1 {
-            panic!("Value must be greater than or equal to 1, got {}.",
+            panic!("Guess value must be greater than or equal to 1, got {}.",
                    value);
         } else if value > 100 {
-            panic!("Value must be less than or equal to 100, got {}.",
+            panic!("Guess value must be less than or equal to 100, got {}.",
                    value);
         }
 
@@ -357,14 +483,14 @@ mod tests {
 
     #[test]
     // 测试会通过，因为 expected 参数提供的值是 Guess::new 函数 panic 信息的子串
-    #[should_panic(expected = "Value must be less than or equal to 100")]
+    #[should_panic(expected = "Guess Value must be less than or equal to 100")]
     fn greater_than_100() {
         Guess::new(200);
     }
 }
 ```
 
-修改代码：
+可以指定完整的预期 panic 信息，指定 expected 参数时如何选择取决于 panic 信息有多独特、动态以及希望测试有多精确。修改代码：
 
 ```rust
 if value < 1 {
@@ -397,11 +523,11 @@ test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out
 
 测试失败，输出结果表明代码确实发生了 `panic`，但是 `panic` 信息中并没有包含 `expected` 提供的信息，有了这些信息，我们就可以检查测试失败的原因出在哪里了。
 
-### 将 `Result<T, E>` 用于测试
+### 在测试中使用 `Result<T, E>`
 
-测试函数可以采用返回 `Result` 的形式来编写。
+可以使用 `Result<T, E>` ，以返回 `Err` 代替失败时 Panic 来编写测试函数。
 
-在函数体中，测试成功返回 Ok(()) 而不是 `assert_eq!`，测试失败时返回 `Err` 而不是调用 `panic!`
+在函数体中，测试成功返回 Ok(()) 而不是调用 `assert_eq!` 宏，测试失败时返回内部包含 `String` 的 `Err`。
 
 使用 `Result<T, E>` 编写测试时不再需要为测试函数增加 `#[should_panic]` 属性
 
@@ -418,6 +544,8 @@ mod tests {
     }
 }
 ```
+
+注意：无法在使用 `Result<T, E>` 的测试函数上使用 `#[should_panic]` 注解。而是应当在测试失败时直接返回一个 `Err` 值。
 
 ## 运行测试
 
