@@ -1,1 +1,0 @@
-# The Rust Programming Language
