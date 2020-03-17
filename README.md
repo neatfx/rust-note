@@ -2,73 +2,14 @@
 
 编程语言 Rust 学习笔记
 
-## 内容目录
+## 待完成
 
-- 项目管理
-  - [x] cargo
-  - [x] package-and-crate
-  - [x] module
-- 通用编程概念
-  - [x] variable
-  - [x] data-type
-  - [x] struct
-  - [x] enumeration
-  - 集合
-    - [x] vector
-    - [x] string
-    - [x] hashmap
-  - 智能指针
-    - [x] box
-    - [x] deref-trait
-    - [x] drop-trait
-    - [x] rc
-    - [ ] refcell
-    - [ ] reference-cycles-and-memory-leak
-  - [x] function
-  - [x] control-flow
-  - [x] error-handling
-  - [x] comment
-- 所有权
-  - [x] ownership
-- 抽象
-  - [x] generic-type
-  - [x] trait
-- 生命周期
-  - lifetime
-- 并发编程
-  - [x] intro
-  - [x] process-and-thread
-  - [x] thread-models
-  - [x] create-thread
-  - [x] communication
-  - [x] share-state
-  - [x] extensible
-- 测试
-  - [x] write
-  - [x] run
-  - [x] result
-  - [x] unit-and-integration
-- 模式匹配
-  - [x] intro
-  - [x] places-for-patterns
-  - [x] refutability
-  - [x] syntax
-- 编程范式
-  - 函数式编程特性
-    - [ ] closure
-    - [ ] iterator
-    - [ ] performance
-  - 面向对象特性
-    - [ ] oo-intro
-    - [ ] trait-object
-    - [ ] oo-design-patterns
-- 高级特性
-  - [ ] unsafe-rust
-  - [ ] advanced-lifetime
-  - [ ] advanced-trait
-  - [ ] advanced-types
-  - [ ] advanced-function-and-closure
-  - [ ] macros
+- [ ] 智能指针
+- [ ] 无惧并发
+- [ ] 模式匹配
+- [ ] 函数式编程特性
+- [ ] 面向对象编程特性
+- [ ] 高级特性
 
 ## 如何使用
 
