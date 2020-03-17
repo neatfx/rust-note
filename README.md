@@ -2,7 +2,9 @@
 
 编程语言 Rust 学习笔记
 
-## 待完成
+## 笔记目录
+
+### 《The Rust Programming Language》
 
 - [ ] 智能指针
 - [ ] 无惧并发
@@ -10,25 +12,6 @@
 - [ ] 函数式编程特性
 - [ ] 面向对象编程特性
 - [ ] 高级特性
-
-## 如何使用
-
-```bash
-# 克隆本仓库
-git clone git@github.com:neatfx/rust-note.git
-
-# 进入项目目录
-cd rust-note
-
-# 安装 VuePress
-npm install
-
-# 使用 VuePress 生成静态网页并启动本地服务器
-npm run docs:dev
-
-# 查看文档
-使用浏览器访问 http://localhost:8080
-```
 
 ## 支持本项目
 
