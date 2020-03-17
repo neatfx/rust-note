@@ -1,14 +1,13 @@
 # Rust Note
 
-编程语言 Rust 学习笔记
+[《The Rust Programming Language》](https://doc.rust-lang.org/stable/book/) 阅读笔记
 
-## 笔记目录
+## 阅读进度
 
-### 《The Rust Programming Language》
-
+- [x] 其它章节
 - [ ] 智能指针
 - [ ] 无惧并发
-- [ ] 模式匹配
+- [x] 模式匹配
 - [ ] 函数式编程特性
 - [ ] 面向对象编程特性
 - [ ] 高级特性
