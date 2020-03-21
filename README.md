@@ -1,6 +1,6 @@
 # Rust Note
 
-本项目为[《The Rust Programming Language》](https://doc.rust-lang.org/stable/book/) 的通读笔记，基于个人理解，非 Google 机翻，非逐字翻译。
+本项目为[《The Rust Programming Language》](https://doc.rust-lang.org/stable/book/) 的通读笔记，基于个人理解，非机翻，非逐字翻译。
 
 ## 剩余章节
 
