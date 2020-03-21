@@ -2,7 +2,7 @@
 
 本项目为[《The Rust Programming Language》](https://doc.rust-lang.org/stable/book/) 的通读笔记。
 
-值得花时间的原因在于阅读技术文档，很多时候译版不如原版，机翻不如手翻。更重要的是出于对 Rust 这门语言的喜爱。
+值得为此花时间的原因在于很多时候阅读原版文档获益更多，以及对 Rust 语言的喜爱。
 
 ## 剩余章节
 
