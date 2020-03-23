@@ -1,0 +1,18 @@
+  
+[book]
+title = "Rust Note"
+description = "《 The Rust Programming Language 》通读笔记"
+author = "neatfx@gmail.com"
+
+[build]
+create-missing = false
+
+[output.html.search]
+limit-results = 15
+
+[output.html.fold]
+enable = true
+
+[output.html.playpen]
+copy-js = true
+line-numbers = true
