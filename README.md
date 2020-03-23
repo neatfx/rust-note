@@ -19,7 +19,7 @@ cargo install mdbook
 # 第 2 步：渲染 Markdown 文件，输出 HTML 页面
 mdbook build
 
-# 第 3 步：使用浏览器打开 `book/index.html` 查看文档
+# 第 3 步：使用浏览器打开 "book/index.html" 查看文档
 ```
 
 ## 支持本项目
