@@ -1,6 +1,6 @@
 # *Rust Note*
 
-鉴于实时处理、机器人、IoT 等领域的进展，是时候掌握一门新的系统语言了！从内存管理设计到性能可靠性表现，面向未来的 Rust 语言气质独特，值得花时间深入了解。同时经验告诉我们，阅读原版技术文档往往收益更多。因此选择对 [*The Rust Programming Language 2018 Edition*](https://doc.rust-lang.org/stable/book/) 进行通读并做笔记。
+鉴于实时处理、机器人、IoT 等领域的进展，是时候掌握一门新的系统语言了！从内存管理设计到性能可靠性表现，面向未来的 Rust 语言气质独特，值得花时间深入了解。考虑阅读原版技术文档往往收益更多，因而选择对 [*The Rust Programming Language 2018 Edition*](https://doc.rust-lang.org/stable/book/) 进行通读并记录笔记。
 
 ## TODO
 
