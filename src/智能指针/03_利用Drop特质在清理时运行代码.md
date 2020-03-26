@@ -1,14 +1,12 @@
 # 利用 `Drop` 特质进行清理
 
-其他语言需在每次使用完智能指针实例后调用清理内存或资源的代码，忘记的话可能导致系统崩溃。
+第二个对智能指针模式很重要的特质是 `Drop`，它允许对值将要离开作用域时候的行为进行定制。可以为任何类型提供 `Drop` 特质的实现，指定的代码将被用于释放资源，比如文件或者网络连接。接下来将要介绍 `Drop` 特质是因为其功能通常被用于实现智能指针。例如，`Box<T>` 自定义了 `Drop` 用来释放 `box` 所指向的堆内存空间。
 
-在 Rust 中，通过指定在值离开作用域时需要被执行的代码（ 以实现 `Drop` 特质的方式 ），编译器将自动插入并且执行这些代码，无需在程序中编写用于实例结束时清理的代码，并且不会泄露资源。
-
-可以为任何类型提供 `Drop` 特质的实现，用于释放资源。不过 `Drop` 特质更常用于实现智能指针。例如 `Box<T>` 自定义了 `Drop` 用来释放 box 所指向的堆空间。
+一些语言中，每次使用完智能指针实例后，程序员必须调用代码对内存或资源进行清理。如果忘记清理，系统可能会超负荷并且崩溃。在 Rust 中可以指定一些在值离开作用域时执行的特定代码（ 以实现 `Drop` 特质的方式 ），编译器将自动插入这些代码，因此无需关心在程序中到处放置用于特定类型实例结束时用到的清理代码，也不会泄露资源。
 
 ## 自动清理
 
-- `Drop` 特质包含在 `prelude` 中，无需导入
+- `Drop` 特质包含在 `prelude` 中，使用时无需导入
 - `Drop` 特质要求实现 `drop` 方法，用于执行当类型实例离开作用域时需要运行的逻辑
 - 当实例离开作用域时，其 `drop` 方法自动调用，以与创建顺序相反的顺序被丢弃（ d 在 c 之前 ）
 
@@ -17,8 +15,11 @@ struct CustomSmartPointer {
     data: String,
 }
 
+// 通过实现 `Drop` 特质来指定当值离开作用域时运行的代码（ 实例离开作用域时打印信息 ）
 impl Drop for CustomSmartPointer {
+    // `Drop` 特质要求实现一个名为 `drop` 的方法，该方法接受一个 `self` 的可变引用作为参数
     fn drop(&mut self) {
+        // 此打印语句用于表明 Rust 自动调用了 drop 方法，实际应用中此处应放置与清理相关的代码，而不仅仅只是打印语句
         println!("Dropping CustomSmartPointer with data `{}`!", self.data);
     }
 }
@@ -27,10 +28,10 @@ fn main() {
     let c = CustomSmartPointer { data: String::from("my stuff") };
     let d = CustomSmartPointer { data: String::from("other stuff") };
     println!("CustomSmartPointers created.");
-}
+} // 实例 CustomSmartPointer 离开作用域，此时 Rust 将自动调用 drop 方法
 ```
 
-运行程序输出：
+运行程序：
 
 ```shell
 CustomSmartPointers created.
@@ -38,11 +39,13 @@ Dropping CustomSmartPointer with data `other stuff`!
 Dropping CustomSmartPointer with data `my stuff`!
 ```
 
-## 提前主动清理
+变量以与创建顺序相反的顺序被清理，因此 `d` 将先于 `c` 被清理。
 
-`Drop` 特质的意义在于自动处理。然而有时可能需要提前清理某个值（ 而不是等到值离开作用域时由 Rust 调用 `drop` 方法进行自动清理 ），比如使用智能指针管理锁时，可能希望强制运行 `drop` 方法来释放锁以便作用域中的其他代码可以获取锁。
+## 提前清理
 
-但是，Rust 并不允许主动调用 `Drop` 特质的 `drop` 方法：
+不幸的是，不能简单的禁用自动 drop 功能，禁用自动 drop 通常也是不必要的；`Drop` 特质的意义就在于自动调用。然而有时可能需要提前清理某个值（ 而不是等到值离开作用域时由 Rust 调用 `drop` 方法进行自动清理 ）。例如，使用智能指针管理锁时，可能希望强制运行 `drop` 方法释放锁以便相同作用域中的其他代码可以获取锁。但是，Rust 并不允许主动调用 `Drop` 特质的 `drop` 方法；因此，如果想要在值的作用域结束之前强制对其进行清理，只能调用由标准库提供的 `std::mem::drop` 函数。
+
+手动调用 `Drop` 特质的 `drop` 方法进行清理：
 
 ```rust
 fn main() {
@@ -63,11 +66,13 @@ error[E0040]: explicit use of destructor method
    |       ^^^^ explicit destructor calls not allowed
 ```
 
-错误信息表明 Rust 不允许显式调用 `drop` 方法（ 同时也指出了 `drop` 是一个析构函数 ），这是因为 Rust 会在 `main` 方法结尾对值自动调用 `drop` 方法，这将导致双重释放错误（ 清理相同的值两次 ）, 并且，自动插入的 `drop` 功能是无法禁用的（ 通常也不需要禁用 ）。
+错误信息表明 Rust 不允许显式调用 `drop` 方法。错误信息使用了 “析构函数” 术语（ 通用编程术语，指用于清理实例的函数 ）。在 Rust 中，drop 函数是一个特定的析构函数。
+
+Rust 之所以不允许显式调用 drop 函数是因为在 `main` 方法结尾 Rust 仍然会对值自动调用 `drop` 方法，这将导致双重释放错误因为 Rust 将会对相同的值清理两次。
+
+当值离开作用域的时候，无法禁用自动插入的 drop 方法，也无法显式调用 drop 方法。因此，如果需要强制提前清理一个值，可以使用 `std::mem::drop` 函数。此函数与 Drop 特质中的 drop 方法不同，我们需要将想要强制提前清理的值作为参数传给它来进行调用。该函数包含于 `prelude`，因此使用前无需导入。
 
 ### 使用 `std::mem::drop` 在作用域结束之前强制释放变量
-
-该函数包含于 `prelude`，无需导入
 
 ```rust
 struct CustomSmartPointer {
@@ -94,11 +99,10 @@ fn main() {
 CustomSmartPointer created.
 Dropping CustomSmartPointer with data `some data`!
 CustomSmartPointer dropped before the end of main.
-Dropping CustomSmartPointer with data `some data`!
 ```
 
-第2行输出表明 drop 方法被调用并在此丢弃了 c
+第 2 行输出表明 drop 方法被调用并在那个位置对 c 进行了清理。
 
-通过实现 `Drop` 特质使清理操作变得方便和安全，这非常有用，比如可以用来创建我们自己的内存分配器，通过 `Drop` 特质和 Rust 所有权系统，无需担心之后清理代码，Rust 会自动考虑这些问题。
+以不同方式使用在 `Drop` 特质实现中指定的代码使内存清理操作既方便又安全：例如，可以用来创建自己的内存分配器！有了 `Drop` 特质和 Rust 的所有权系统，无需担心忘记清理内存，Rust 会自动清理。
 
-我们也无需担心意外清理掉仍在使用的值（ 引发编译时错误 ），所有权系统会确保引用总是有效以及 `drop` 方法只会在值不再被使用时被调用一次。
+我们也无需担心意外清理掉仍在使用的值（ 引发编译时错误 ）：所有权系统会确保引用总是有效以及值不再被使用时 `drop` 方法只会被调用一次。
