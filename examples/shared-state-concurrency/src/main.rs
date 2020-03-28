@@ -1,6 +1,8 @@
 use std::sync::Mutex;
 use std::thread;
 
+// 此代码将会报错 error[E0382]: use of moved value: `counter`
+
 fn main() {
     let counter = Mutex::new(0);
     let mut handles = vec![];
