@@ -10,7 +10,7 @@
 
 ## 使用说明
 
-Markdown 文件位于 `src/` 目录，可以直接浏览或者使用 [mdbook](https://crates.io/crates/mdbook) 工具生成 HTML 格式
+Markdown 文档位于 `src/` 目录，可使用 [mdbook](https://crates.io/crates/mdbook) 工具生成 HTML 格式
 
 ```bash
 # 第 1 步：安装文档构建工具
@@ -20,6 +20,16 @@ cargo install mdbook
 mdbook build
 
 # 第 3 步：使用浏览器打开 "book/index.html" 查看文档
+```
+
+示例代码位于 `examples/` 目录，使用工作区进行组织
+
+```bash
+# 第 1 步：切换至代码目录
+cd examples
+
+# 第 2 步：运行示例
+cargo run --bin shared-state-concurrency
 ```
 
 ## 支持本项目
