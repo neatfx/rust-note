@@ -1,5 +1,6 @@
 [workspace]
 members = [
+  "closure",
   "reference-cycles",
   "shared-state-concurrency",
 ]
