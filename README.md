@@ -1,11 +1,20 @@
 # *Rust Note*
 
-鉴于实时处理、机器人、IoT 等领域的进展，是时候掌握一门新的系统语言了！从内存管理设计到性能可靠性表现，面向未来的 Rust 语言气质独特，值得花时间深入了解。考虑阅读原版文档往往收益更多，因而选择对 [*The Rust Programming Language 2018 Edition*](https://doc.rust-lang.org/stable/book/) 进行通读并在此记录。
+鉴于实时处理、机器人、IoT 等领域的进展，是时候掌握一门新的系统语言了！
 
-## TODO
+> 无 Runtime、无 GC、多范式、零成本抽象 ---> 语法友好、资源占用低、高性能、与其他语言轻松集成
+>
+> 类型系统、所有权模型 ---> 编译时内存安全、编译时线程安全
 
-- 面向对象编程特性
-- 高级特性
+从内存管理设计到性能可靠性表现，面向未来的 Rust 语言气质独特，值得花时间深入了解。
+
+考虑阅读原版文档往往收益更多，因而选择对 [*The Rust Programming Language 2018 Edition*](https://doc.rust-lang.org/stable/book/) 进行通读并在此记录。
+
+## 项目进度
+
+- [x] 其它章节
+- [ ] 高级特性
+- [ ] 示例代码
 
 ## 使用说明
 
@@ -21,14 +30,14 @@ mdbook build
 # 第 3 步：使用浏览器打开 "book/index.html" 查看文档
 ```
 
-示例代码位于 `examples/` 目录，使用工作区进行组织
+示例代码位于 `examples/` 目录，其内容、数量、组织结构可能与原版存在较大差异
 
 ```bash
 # 第 1 步：切换至代码目录
 cd examples
 
-# 第 2 步：运行示例
-cargo run --bin shared-state-concurrency
+# 第 2 步：运行测试
+cargo test
 ```
 
 ## 支持本项目
