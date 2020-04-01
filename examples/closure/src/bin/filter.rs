@@ -1,4 +1,4 @@
-mod shoes_filter {
+pub mod shoes_filter {
     #[derive(PartialEq, Debug)]
     pub struct Shoe {
         pub size: u32,
