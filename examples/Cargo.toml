@@ -3,4 +3,5 @@ members = [
   "closure",
   "reference-cycles",
   "shared-state-concurrency",
+  "oop-state-pattern",
 ]

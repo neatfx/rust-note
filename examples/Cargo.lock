@@ -5,6 +5,10 @@ name = "closure"
 version = "0.1.0"
 
 [[package]]
+name = "oop-state-pattern"
+version = "0.1.0"
+
+[[package]]
 name = "reference-cycles"
 version = "0.1.0"
 
