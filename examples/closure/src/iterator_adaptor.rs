@@ -1,4 +1,6 @@
-pub mod shoes_filter {
+// 迭代器适配器
+
+pub mod iterator_adaptor {
     #[derive(PartialEq, Debug)]
     pub struct Shoe {
         pub size: u32,
@@ -17,14 +19,12 @@ pub mod shoes_filter {
     }
 }
 
-fn main() {}
-
 #[cfg(test)]
 mod tests {
-  use crate::shoes_filter::{Shoe, shoes_in_my_size};
+  use super::iterator_adaptor::{Shoe, shoes_in_my_size};
 
   #[test]
-  fn filters_by_size() {
+  fn filter_by_size() {
       let shoes = vec![
           Shoe { size: 10, style: String::from("sneaker") },
           Shoe { size: 13, style: String::from("sandal") },
