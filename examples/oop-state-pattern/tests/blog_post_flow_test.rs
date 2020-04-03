@@ -1,6 +1,10 @@
-use oop_state_pattern::blog::Post;
+#[cfg(test)]
+mod tests {
+  use oop_state_pattern::blog::Post;
 
-fn main() {
+  #[test]
+  fn blog_post_workflow() {
+
     let mut post = Post::new();
 
     post.add_text("I ate a salad for lunch today");
@@ -11,4 +15,5 @@ fn main() {
 
     post.approve();
     assert_eq!("I ate a salad for lunch today", post.content());
+  }
 }
