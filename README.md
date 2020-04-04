@@ -34,7 +34,7 @@ mdbook build
 
 ```bash
 # 第 1 步：切换至代码目录
-cd examples
+cd examples/anyone
 
 # 第 2 步：运行测试
 cargo test
