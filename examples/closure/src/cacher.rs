@@ -1,4 +1,4 @@
-// 利用闭包进行延迟计算
+// 利用闭包实现惰性计算
 
 pub mod cacher {
   use std::thread;
