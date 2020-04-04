@@ -39,8 +39,3 @@ cd examples
 # 第 2 步：运行测试
 cargo test
 ```
-
-## 支持本项目
-
-![alipay](https://raw.githubusercontent.com/neatfx/donation/master/alipay.jpeg)
-![wechat-pay](https://raw.githubusercontent.com/neatfx/donation/master/wechat-pay.jpeg)
