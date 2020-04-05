@@ -10,6 +10,11 @@ fn main() {
     // bind 返回 Result<T, E>
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
     let pool = ThreadPool::new(4);
+
+    // match listener.accept() {
+    //     Ok((_socket, addr)) => println!("new client: {:?}", addr),
+    //     Err(e) => println!("couldn't get client: {:?}", e),
+    // }
     // incoming 返回迭代器
     for stream in listener.incoming().take(2) {
         let stream = stream.unwrap();
@@ -30,16 +35,16 @@ fn handle_connection(mut stream: TcpStream) {
     let sleep = b"GET /sleep HTTP/1.1\r\n";
 
     let (status_line, filename) = if buffer.starts_with(get) {
-        ("HTTP/1.1 200 OK\r\n\r\n", "hello.html")
+        ("HTTP/1.1 200 OK\r\n", "hello.html")
     } else if buffer.starts_with(sleep) {
         thread::sleep(Duration::from_secs(5));
-        ("HTTP/1.1 200 OK\r\n\r\n", "hello.html")
+        ("HTTP/1.1 200 OK\r\n", "hello.html")
     } else {
-        ("HTTP/1.1 404 NOT FOUND\r\n\r\n", "404.html")
+        ("HTTP/1.1 404 NOT FOUND\r\n", "404.html")
     };
 
     let contents = fs::read_to_string(filename).unwrap();
-    let response = format!("{}{}", status_line, contents);
+    let response = format!("{}Content-Length: {}\r\n\r\n{}", status_line, contents.len(), contents);
 
     // println!("{}", response);
     stream.write(response.as_bytes()).unwrap();
