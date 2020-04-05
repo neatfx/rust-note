@@ -2,3 +2,4 @@ book/
 .DS_Store
 target
 tmp
+node_modules/
