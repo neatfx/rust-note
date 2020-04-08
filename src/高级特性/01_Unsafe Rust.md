@@ -55,7 +55,7 @@ let r2 = &mut num as *mut i32;
 下面创建一个指向任意内存地址的原始指针，对于此原始指针，我们无法确定其有效性：
 
 ```rust
-// 尝试使用任意内存是不明确的：那里可能有数据也可能没有，编译器可能会将此内存访问优化掉，或者程序可能会出现段错误（ segmentation fault ）
+// 使用任意内存是不确定的：那里可能有数据也可能没有，编译器可能会将此内存访问优化掉，或者程序可能会出现 segmentation fault
 // 尽管可以这样编写代码，但通常没有合适的理由这样做
 let address = 0x012345usize;
 let r = address as *const i32;
@@ -192,7 +192,8 @@ fn split_at_mut(slice: &mut [i32], mid: usize) -> (&mut [i32], &mut [i32]) {
 
 ```rust
 // 使用任意内存地址并创建了一个长度为 10000 的 `slice`
-// 我们并不拥有此地址的内存，也不能保证代码创建的 `slice` 中包含有效的 `i32` 值。尝试像使用有效的 `slice` 一样使用 `slice` 使用会导致不确定的行为
+// 我们并不拥有此地址的内存，也不能保证代码创建的 `slice` 中包含有效的 `i32` 值。
+// 尝试像使用有效的 `slice` 一样使用 `slice` 使用会导致不确定的行为
 use std::slice;
 
 let address = 0x01234usize;
