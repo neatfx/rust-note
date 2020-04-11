@@ -1,18 +1,16 @@
 # *Rust Note*
 
 ```bash
-# ----------------------------
-# | Hello fellow Rustaceans! |
-# ----------------------------
+# ----------------------------------------------------------------------------------
+# | 无 Runtime、无 GC、多范式、零成本抽象 ---> 语法友好、资源占用低、高性能、与其他语言轻松集成 |
+# | 类型系统、所有权模型 ---> 编译时内存安全、编译时线程安全                                |
+# ----------------------------------------------------------------------------------
 #               \
 #                \
 #                   _~^~^~_
 #               \) /  o o  \ (/
 #                 '_   -   _'
 #                 / '-----' \
-#
-# 无 Runtime、无 GC、多范式、零成本抽象 ---> 语法友好、资源占用低、高性能、与其他语言轻松集成
-# 类型系统、所有权模型 ---> 编译时内存安全、编译时线程安全
 ```
 
 鉴于实时处理、机器人、IoT 等领域的进展，是时候掌握一门新的系统语言了！
@@ -23,7 +21,6 @@
 
 - [x] 其它章节
 - [ ] 高级特性 - 宏
-- [ ] [资源列表](src/资源列表.md)
 
 ## 使用说明
 
@@ -48,3 +45,37 @@ cd examples/anyone
 # 第 2 步：运行测试
 cargo test
 ```
+
+## 资源列表
+
+### 参考文档
+
+|  分类  |  参考文档  |  中文版 |
+|  ---  | ---  |  ---   |
+| 语言  | [The Rust Programming Language](https://doc.rust-lang.org/stable/book/)  | [链接](https://rustlang-cn.org/office/rust/book/)  |
+| 语言  | [The Rust Reference](https://doc.rust-lang.org/reference/introduction.html) | [链接](https://rustlang-cn.org/office/rust/reference/)|
+| 语言  | [The Rustonomicon](https://doc.rust-lang.org/nomicon/index.html) | [链接](https://rustlang-cn.org/office/rust/advrust/)|
+| 语言  | [Rust Quiz](https://dtolnay.github.io/rust-quiz/1)||
+| 语言  | [Rust by Example](https://doc.rust-lang.org/rust-by-example/index.html) ||
+| 标准库 | [The Rust Standard Library](https://doc.rust-lang.org/std/index.html) ||
+| 编译器 | [Guide to Rustc Development](https://rustc-dev-guide.rust-lang.org/) ||
+| Cargo | [The Cargo Book](https://doc.rust-lang.org/cargo/index.html) | [链接](https://rustlang-cn.org/office/rust/cargo/)  |
+| 异步编程 | [Asynchronous Programming in Rust](https://rust-lang.github.io/async-book/) | [链接](https://rustlang-cn.org/office/rust/async-rust/)|
+| 命令行应用编程 | [Command Line Apps in Rust](https://rust-lang-nursery.github.io/cli-wg/index.html)||
+| WebAssembly | [Rust and Webassembly](https://rustwasm.github.io/book/)||
+| 嵌入式 | [The Embedded Rust Book](https://rust-embedded.github.io/book/) ||
+| 嵌入式 | [The Discovery Book](https://rust-embedded.github.io/discovery/)| [链接](https://rustlang-cn.org/office/iot/discovery/) |
+| 嵌入式 | [The Embedonomicon Book](https://docs.rust-embedded.org/embedonomicon/)||
+
+### 社区工具
+
+|  分类 |  工具  |
+|  ---  | ---  |
+| Web 开发框架 | [Rocket](https://rocket.rs/)
+| Web 开发框架 | [Actix](https://actix.rs/)
+| 应用开发框架  | [Riker](https://riker.rs/)
+| 异步运行时   | [Tokio](https://tokio.rs/)
+| 数据序列化 & 反序列化 | [Serde](https://github.com/serde-rs/serde)
+| ORM | [Diesel](https://diesel.rs/)
+| WebAssembly | [wasm-bindgen](https://github.com/rustwasm/wasm-bindgen)
+| WebAssembly | [wasm-pack](https://github.com/rustwasm/wasm-pack)
