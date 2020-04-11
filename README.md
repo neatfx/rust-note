@@ -46,31 +46,35 @@ cd examples/anyone
 cargo test
 ```
 
-## 资源列表
+## Rust 资源列表
 
 ### 参考文档
 
 |  分类  |  参考文档  |  中文版 |
-|  ---  | ---  |  ---   |
-| 语言  | [The Rust Programming Language](https://doc.rust-lang.org/stable/book/)  | [链接](https://rustlang-cn.org/office/rust/book/)  |
-| 语言  | [The Rust Reference](https://doc.rust-lang.org/reference/introduction.html) | [链接](https://rustlang-cn.org/office/rust/reference/)|
-| 语言  | [The Rustonomicon](https://doc.rust-lang.org/nomicon/index.html) | [链接](https://rustlang-cn.org/office/rust/advrust/)|
+|  :---:  | :---:  |  :---:   |
+| 语言  | [The Rust Programming Language](https://doc.rust-lang.org/stable/book/)  | [《 Rust 编程语言 》](https://rustlang-cn.org/office/rust/book/)  |
+| 语言  | [The Rust Reference](https://doc.rust-lang.org/reference/introduction.html) | [《 Rust 语言参考 》](https://rustlang-cn.org/office/rust/reference/)|
+| 语言  | [The Rustonomicon](https://doc.rust-lang.org/nomicon/index.html) | [《 Rust 死灵书 》](https://rustlang-cn.org/office/rust/advrust/)|
 | 语言  | [Rust Quiz](https://dtolnay.github.io/rust-quiz/1)||
 | 语言  | [Rust by Example](https://doc.rust-lang.org/rust-by-example/index.html) ||
-| 标准库 | [The Rust Standard Library](https://doc.rust-lang.org/std/index.html) ||
 | 编译器 | [Guide to Rustc Development](https://rustc-dev-guide.rust-lang.org/) ||
-| Cargo | [The Cargo Book](https://doc.rust-lang.org/cargo/index.html) | [链接](https://rustlang-cn.org/office/rust/cargo/)  |
-| 异步编程 | [Asynchronous Programming in Rust](https://rust-lang.github.io/async-book/) | [链接](https://rustlang-cn.org/office/rust/async-rust/)|
-| 命令行应用编程 | [Command Line Apps in Rust](https://rust-lang-nursery.github.io/cli-wg/index.html)||
+| 核心库 | [The Rust Core Library](https://doc.rust-lang.org/core/index.html) ||
+| 标准库 | [The Rust Standard Library](https://doc.rust-lang.org/std/index.html) ||
+| Cargo | [The Cargo Book](https://doc.rust-lang.org/cargo/index.html) | [《 Cargo 指南 》](https://rustlang-cn.org/office/rust/cargo/)  |
+| 异步处理 | [Asynchronous Programming in Rust](https://rust-lang.github.io/async-book/) | [《 Rust 异步编程 》](https://rustlang-cn.org/office/rust/async-rust/)|
+
+|  面向领域        |  参考文档  |  中文版 |
+|  :---:        |      :---:  |  :---:   |
+| 命令行    | [Command Line Apps in Rust](https://rust-lang-nursery.github.io/cli-wg/index.html)||
 | WebAssembly | [Rust and Webassembly](https://rustwasm.github.io/book/)||
-| 嵌入式 | [The Embedded Rust Book](https://rust-embedded.github.io/book/) ||
-| 嵌入式 | [The Discovery Book](https://rust-embedded.github.io/discovery/)| [链接](https://rustlang-cn.org/office/iot/discovery/) |
-| 嵌入式 | [The Embedonomicon Book](https://docs.rust-embedded.org/embedonomicon/)||
+| 嵌入式       | [The Embedded Rust Book](https://rust-embedded.github.io/book/) ||
+| 嵌入式       | [The Discovery Book](https://rust-embedded.github.io/discovery/)| [《 嵌入式探索之旅 》](https://rustlang-cn.org/office/iot/discovery/) |
+| 嵌入式       | [The Embedonomicon Book](https://docs.rust-embedded.org/embedonomicon/)||
 
-### 社区工具
+### 开发资源
 
-|  分类 |  工具  |
-|  ---  | ---  |
+|  分类 |  框架 / 工具 / 库 |
+|  :---:  | :---:  |
 | Web 开发框架 | [Rocket](https://rocket.rs/)
 | Web 开发框架 | [Actix](https://actix.rs/)
 | 应用开发框架  | [Riker](https://riker.rs/)
