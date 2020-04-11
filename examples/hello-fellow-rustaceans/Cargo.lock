@@ -68,13 +68,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "diamonds-and-rust"
-version = "0.1.0"
-dependencies = [
- "ferris-says 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
 name = "error-chain"
 version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -90,6 +83,13 @@ dependencies = [
  "clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "error-chain 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "smallvec 0.4.5 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "hello-fellow-rustaceans"
+version = "0.1.0"
+dependencies = [
+ "ferris-says 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
