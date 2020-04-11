@@ -1,29 +1,29 @@
 pub mod fully_qualified_syntax {
   pub trait Pilot {
-    fn fly(&self);
+    fn fly(&self) -> String;
   }
 
   pub trait Wizard {
-    fn fly(&self);
+    fn fly(&self) -> String;
   }
 
   pub struct Human;
 
   impl Pilot for Human {
-    fn fly(&self) {
-        println!("This is your captain speaking.");
+    fn fly(&self) -> String {
+      String::from("This is your captain speaking.")
     }
   }
 
   impl Wizard for Human {
-    fn fly(&self) {
-        println!("Up!");
+    fn fly(&self) -> String {
+      String::from("Up!")
     }
   }
 
   impl Human {
-    fn fly(&self) {
-        println!("*waving arms furiously*");
+    fn fly(&self) -> String {
+      String::from("*waving arms furiously*")
     }
   }
 }
@@ -36,8 +36,8 @@ mod tests {
   fn test() {
     let person = Human;
 
-    Pilot::fly(&person);
-    Wizard::fly(&person);
+    assert_eq!(Pilot::fly(&person), "This is your captain speaking.");
+    assert_eq!(Wizard::fly(&person), "Up!");
 
     // person.fly(&person); // 存在歧义，无法通过编译
     // Human::fly(&person); // 存在歧义，无法通过编译
