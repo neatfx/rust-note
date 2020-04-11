@@ -1,4 +1,4 @@
-# *代码示例*
+# *代码示例内容*
 
 ## *《 Rust 编程语言 》*
 
@@ -16,9 +16,3 @@
 ## *《 Rust Cookbook 》*
 
 - [x] external-command-git
-
-## *异步处理*
-
-- [ ] futures
-
-## *网络编程*
