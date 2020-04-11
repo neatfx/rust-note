@@ -1,4 +1,4 @@
-pub mod outline_print {
+pub mod supertrait {
   use std::fmt;
 
   pub trait OutlinePrint: fmt::Display {
@@ -30,7 +30,7 @@ pub mod outline_print {
 
 #[cfg(test)]
 mod tests {
-  use super::outline_print::{Point, OutlinePrint};
+  use super::supertrait::{Point, OutlinePrint};
 
   #[test]
   fn test() {  
