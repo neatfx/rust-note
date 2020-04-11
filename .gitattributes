@@ -1,2 +1,2 @@
-*.md linguist-language=markdown
-*.rs linguist-language=rust
+*.md linguist-language=Markdown
+*.rs linguist-language=Rust
