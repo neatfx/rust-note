@@ -88,6 +88,7 @@ cargo test
 |  :---:  | :---:  |
 | Web 开发框架 | [Rocket](https://rocket.rs/)
 | Web 开发框架 | [Actix](https://actix.rs/)
+| HTTP 库 | [Hyper](https://github.com/hyperium/hyper)
 | 应用开发框架  | [Riker](https://riker.rs/)
 | 异步运行时   | [Tokio](https://tokio.rs/)
 | 数据序列化 & 反序列化 | [Serde](https://github.com/serde-rs/serde)
