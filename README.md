@@ -73,16 +73,16 @@ cargo test
 |  :---:        |      :---:  |  :---:   | :---: |
 | 命令行    | [Command Line Apps in Rust](https://rust-lang-nursery.github.io/cli-wg/index.html)||[GitHub](https://github.com/rust-lang-nursery/cli-wg)
 | WebAssembly | [Rust and Webassembly](https://rustwasm.github.io/docs/book/)|| [GitHub](https://github.com/rustwasm/book)
-| 嵌入式       | [The Embedded Rust Book](https://rust-embedded.github.io/book/) || [GitHub](https://github.com/rust-embedded/book  )
-| 嵌入式       | [The Discovery Book](https://rust-embedded.github.io/discovery/)| [《 嵌入式探索之旅 》](https://rustlang-cn.org/office/iot/discovery/) |
-| 嵌入式       | [The Embedonomicon Book](https://docs.rust-embedded.org/embedonomicon/)||
+| 嵌入式       | [The Embedded Rust Book](https://rust-embedded.github.io/book/) || [GitHub](https://github.com/rust-embedded/book)
+| 嵌入式       | [The Discovery Book](https://rust-embedded.github.io/discovery/)| [《 嵌入式探索之旅 》](https://rustlang-cn.org/office/iot/discovery/)
+| 嵌入式       | [The Embedonomicon Book](https://docs.rust-embedded.org/embedonomicon/)
 
 ### 代码示例
 
 |  分类  |  参考文档  |  中文版 | 官方仓库 |
 |  :---:  | :---:  |  :---:   | :---: |
 | 语言  | [Rust by Example](https://doc.rust-lang.org/rust-by-example/index.html) | [《 通过例子学 Rust 》](https://github.com/rust-lang-cn/rust-by-example-cn)| [Github](https://github.com/rust-lang/rust-by-example)
-| 语言  | [Rust Quiz](https://dtolnay.github.io/rust-quiz/1)| [GitHub](https://github.com/RustStudy/rust_daily_news/tree/master/RustQuiz)|
+| 语言  | [Rust Quiz](https://dtolnay.github.io/rust-quiz/1)| [GitHub](https://github.com/RustStudy/rust_daily_news/tree/master/RustQuiz)
 | 语言  | [Rust Cookbook](https://rust-lang-nursery.github.io/rust-cookbook/intro.html)| | [GitHub](https://github.com/rust-lang-nursery/rust-cookbook)
 | 语言  | [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/about.html) | | [GitHub](https://github.com/rust-lang/api-guidelines)
 
@@ -92,8 +92,9 @@ cargo test
 |  :---:  | :---:  |
 | Web 开发框架 | [Rocket](https://rocket.rs/)
 | Web 开发框架 | [Actix](https://actix.rs/)
-| HTTP 库 | [Hyper](https://github.com/hyperium/hyper)
 | 应用开发框架  | [Riker](https://riker.rs/)
+| 客户端 Web 应用开发框架 | [Yew](https://yew.rs/)
+| HTTP 库 | [Hyper](https://github.com/hyperium/hyper)
 | 异步运行时   | [Tokio](https://tokio.rs/)
 | 数据序列化 & 反序列化 | [Serde](https://github.com/serde-rs/serde)
 | ORM | [Diesel](https://diesel.rs/)
