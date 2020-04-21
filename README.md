@@ -24,7 +24,7 @@
 
 ## 使用说明
 
-Markdown 文档位于 `src/` 目录，可使用 [mdbook](https://crates.io/crates/mdbook) 工具生成 HTML 格式
+文档位于 `src/` 目录，可使用 [mdbook](https://crates.io/crates/mdbook) 工具生成 HTML 格式，示例代码位于 `examples/` 目录。
 
 ```bash
 # 第 1 步：安装文档构建工具
@@ -34,16 +34,6 @@ cargo install mdbook
 mdbook build
 
 # 第 3 步：使用浏览器打开 "book/index.html" 查看文档
-```
-
-示例代码位于 `examples/` 目录，其内容、数量、组织结构可能与原版存在较大差异
-
-```bash
-# 第 1 步：切换至代码目录
-cd examples/anyone
-
-# 第 2 步：运行测试
-cargo test
 ```
 
 ## 社区资源列表

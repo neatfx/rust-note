@@ -1,0 +1,64 @@
+[package]
+name = "examples"
+version = "0.0.0"
+publish = false
+edition = "2018"
+
+[dev-dependencies]
+ferris-says = "0.1"
+
+[[example]]
+name = "hello-fellow-rustaceans"
+path = "hello-fellow-rustaceans.rs"
+
+[[example]]
+name = "minigrep"
+path = "minigrep.rs"
+
+[[example]]
+name = "shared-state-concurrency"
+path = "shared-state-concurrency.rs"
+
+[[example]]
+name = "iterator"
+path = "iterator.rs"
+
+[[example]]
+name = "iterator_adaptor"
+path = "iterator_adaptor.rs"
+
+[[example]]
+name = "iterator_custom"
+path = "iterator_custom.rs"
+
+[[example]]
+name = "oop-state-pattern"
+path = "oop-state-pattern.rs"
+
+[[example]]
+name = "smart-pointer"
+path = "smart-pointer.rs"
+
+[[example]]
+name = "reference-cycles"
+path = "reference-cycles.rs"
+
+[[example]]
+name = "closure"
+path = "closure.rs"
+
+[[example]]
+name = "advanced_traits_fully_qualified_syntax_without_associated_function"
+path = "advanced_traits_fully_qualified_syntax_without_associated_function.rs"
+
+[[example]]
+name = "advanced_traits_fully_qualified_syntax"
+path = "advanced_traits_fully_qualified_syntax.rs"
+
+[[example]]
+name = "advanced_traits_overloading"
+path = "advanced_traits_overloading.rs"
+
+[[example]]
+name = "advanced_traits_supertrait"
+path = "advanced_traits_supertrait.rs"

@@ -1,7 +1,7 @@
 extern crate ferris_says;
 
 use ferris_says::say;
-use std::io::{ stdout, BufWriter };
+use std::io::{stdout, BufWriter};
 
 fn main() {
     let stdout = stdout();
