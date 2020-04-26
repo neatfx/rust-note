@@ -80,8 +80,15 @@ mdbook build
 
 |  分类 |  框架 / 工具 / 库 |
 |  :---:  | :---:  |
-| Web 开发框架 | [Rocket](https://rocket.rs/)
 | Web 开发框架 | [Actix](https://actix.rs/)
+| Web 开发框架 | [Gotham](https://github.com/gotham-rs/gotham)
+| Web 开发框架 | [Rocket](https://rocket.rs/)
+| Web 开发框架 | [Tower Web](https://github.com/carllerche/tower-web)
+| Web 开发框架 | [Warp](https://crates.io/crates/warp)
+| Web 开发框架 | [Conduit](https://github.com/conduit-rust/conduit)
+| Web 开发框架 | [Nickel.rs](https://github.com/nickel-org/nickel.rs)
+| Web 开发框架 | [Rouille](https://github.com/tomaka/rouille)
+| Web 开发框架 | [Tide](https://github.com/http-rs/tide)
 | 应用开发框架  | [Riker](https://riker.rs/)
 | 客户端 Web 应用开发框架 | [Yew](https://yew.rs/)
 | HTTP 库 | [Hyper](https://github.com/hyperium/hyper)
@@ -90,3 +97,11 @@ mdbook build
 | ORM | [Diesel](https://diesel.rs/)
 | WebAssembly | [wasm-bindgen](https://github.com/rustwasm/wasm-bindgen)
 | WebAssembly | [wasm-pack](https://github.com/rustwasm/wasm-pack)
+
+### 应用
+
+|  分类 |  应用 | 简介 |
+|  :---:  | :---:  | :---: |
+| OS | [Redox](https://github.com/redox-os/redox)
+| Web 引擎 | [Servo](https://github.com/servo/servo)
+| 虚拟化 | [Firecracker](https://github.com/firecracker-microvm/firecracker)
