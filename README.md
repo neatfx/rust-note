@@ -17,11 +17,6 @@
 从内存管理设计到性能可靠性表现，面向未来的 Rust 语言气质独特，值得花时间深入了解。
 考虑阅读原版文档往往收益更多，因而选择对 [*The Rust Programming Language 2018 Edition*](https://doc.rust-lang.org/stable/book/) 进行通读并在此记录。
 
-## 项目进度
-
-- [x] 其它章节
-- [ ] 高级特性 - 宏
-
 ## 使用说明
 
 文档位于 `src/` 目录，可使用 [mdbook](https://crates.io/crates/mdbook) 工具生成 HTML 格式，示例代码位于 `examples/` 目录。
